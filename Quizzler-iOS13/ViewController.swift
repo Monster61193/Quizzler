@@ -16,22 +16,26 @@ class ViewController: UIViewController {
     @IBOutlet weak var trueBtn: UIButton!
     @IBOutlet weak var falseBtn: UIButton!
     
+    
     let quiz = [
-        [ "Four + Two is equal to Six.", "True"],
-        ["Five - Three is greater than One", "True"],
-        ["Three + Eight is less than Ten", "False"]
+        Question(text: "Four + Two is equal to Six.", answer: "True"),
+        Question(text: "Five - Three is greater than One", answer: "True"),
+        Question(text: "Three + Eigth is less than Ten", answer: "False"),
     ]
     
+    
+    var countTimer = Timer()
     var questionNumber: Int = 0
     var score: Int = 0
     var actualProgress: Float = 0
+    var isActive:Bool = true
     
-    override func viewDidLoad() {
+    
+    override func viewDidLoad()   {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
+               
         updateUI ()
-        
         
     }
 
@@ -42,19 +46,28 @@ class ViewController: UIViewController {
         
         if questionNumber < quiz.count  {
             
-            if sender.currentTitle ==  quiz[questionNumber][1]{
+            if sender.currentTitle ==  quiz[questionNumber].answer {
                 score += 1
+                sender.backgroundColor = UIColor.green
+            }else {
+                sender.backgroundColor = UIColor.red
             }
             
             questionNumber += 1
-            updateUI()
+            
+            countTimer = Timer.scheduledTimer(timeInterval: 1.0,target:self, selector: #selector(updateUI),userInfo: nil, repeats: true)
+            
             
         }
     }
     
     
     
-    func updateUI () {
+    @objc func updateUI () {
+        
+        self.countTimer.invalidate()
+        self.trueBtn.backgroundColor = UIColor.clear
+        self.falseBtn.backgroundColor = UIColor.clear
         
         let progress = Float(1.0) / Float(quiz.count)
         if  questionNumber != 0 {
@@ -65,7 +78,7 @@ class ViewController: UIViewController {
         if questionNumber == quiz.count {
             questionText.text = "You have answered \(score) out of \(quiz.count) questions correctly."
         }else {
-            questionText.text = quiz[questionNumber][0]
+            questionText.text = quiz[questionNumber].text
         }
     }
     
