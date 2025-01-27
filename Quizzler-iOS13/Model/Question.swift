@@ -9,13 +9,27 @@
 import Foundation
 
 struct Question {
-    
     let text: String
-    let answer: String
+    let answer: Answer
+    let correctAnswer: String?
     
-    init(q: String, a: String) {
+    
+    init(q: String, a: String, correctAnswer: String? = nil) {
         self.text = q
-        self.answer = a
+        self.answer = .single(a)
+        self.correctAnswer = correctAnswer
     }
     
+    
+    init(q: String, a: [String], correctAnswer: String) {
+        self.text = q
+        self.answer = .multiple(a)
+        self.correctAnswer = correctAnswer
+    }
+}
+
+
+enum Answer {
+    case single(String)
+    case multiple([String])
 }
